@@ -25,4 +25,3 @@ print("DERECHA DE SUMA: " + str(derecha_suma) + "   || 0.35251")  # 0.35251
 print("\n")
 print("RESULTADO OBTENIDO: " + str(suma) + " || 0.88737")  # 0.88737
 print("-------------------------------------------------")
-#en symbolab da 0.88737

@@ -94,32 +94,32 @@ class MainApp(App):
     def choose_operation(self, text):
         match self.button_text:
             case "sen(x)":
-                soltext = str(logica.sin_t(float(text)))
+                soltext = str(funtras.sin_t(float(text)))
             case "cos(x)":
-                soltext = str(logica.cos_t(float(text)))
+                soltext = str(funtras.cos_t(float(text)))
             case "tan(x)":
-                soltext = str(logica.tan_t(float(text)))
+                soltext = str(funtras.tan_t(float(text)))
             case "senh(x)":
-                soltext = str(logica.sinh_t(float(text)))
+                soltext = str(funtras.sinh_t(float(text)))
             case "cosh(x)":
-                soltext = str(logica.cosh_t(float(text)))
+                soltext = str(funtras.cosh_t(float(text)))
             case "tanh(x)":
-                soltext = str(logica.tanh_t(float(text)))
+                soltext = str(funtras.tanh_t(float(text)))
             case "asen(x)":
-                soltext = str(logica.asin_t(float(text)))
+                soltext = str(funtras.asin_t(float(text)))
             case "acos(x)":
-                soltext = str(logica.asin_t(float(text)))  # FALTA !!!!!
+                soltext = str(funtras.asin_t(float(text)))  # FALTA !!!!!
             case "atan(x)":
-                soltext = str(logica.atan_t(float(text)))
+                soltext = str(funtras.atan_t(float(text)))
             case "sec(x)":
-                soltext = str(logica.sec_t(float(text)))
+                soltext = str(funtras.sec_t(float(text)))
             case "csc(x)":
-                soltext = str(logica.csc_t(float(text)))
+                soltext = str(funtras.csc_t(float(text)))
             case "cot(x)":
-                soltext = str(logica.cot_t(float(text)))
+                soltext = str(funtras.cot_t(float(text)))
 
             case "x*y":
-                soltext = str(logica.cot_t(float(text)))
+                soltext = str(funtras.cot_t(float(text)))
             case _:
                 soltext = "-1"
         self.current = soltext
