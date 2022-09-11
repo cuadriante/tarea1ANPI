@@ -1,39 +1,13 @@
 from kivymd.app import MDApp
+from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
+from kivymd.uix.button import MDRectangleFlatButton
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
-from kivymd.uix.button import MDRectangleFlatButton
-from kivymd.uix.textfield import MDTextField
-from kivy.core.window import Window
-from kivy.lang import Builder
 import funtras
-Window.size = (350, 550)
-KV = '''
-BoxLayout:
-    padding: "10dp"
 
-    MDTextField:
-        id: text_field_error
-        hint_text: "color_mode = 'accent'"
-        color_mode: 'accent'
-        pos_hint: {"center_y": .5}
-        mode: "rectangle"
-'''
-
-class MainApp(MDApp):
-    title = "Calculator"
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.screen = Builder.load_string(KV)
-
+class MainApp(App):
     def build(self):
-        self.theme_cls.primary_palette = "Green"  # "Purple", "Red"
-        self.theme_cls.primary_hue = "200"  # "500"
-        self.theme_cls.theme_style = "Dark"  # "Light"
-        self.screen.ids.text_field_error.bind(
-            on_text_validate=self.set_error_message,
-            on_focus=self.set_error_message,
-        )
 
         self.xoperators = ["senh(x)", "cosh(x)", "tanh(x)", "asen(x)", "acos(x)", "atan(x)",
                            "sec(x)", "csc(x)", "cot(x)", "sen(x)", "cos(x)", "tan(x)", "ln(x)", "log10(x)",
@@ -45,14 +19,8 @@ class MainApp(MDApp):
         self.xyop = False
         self.x = ""
         main_layout = BoxLayout(orientation="vertical")
-        '''self.solution = TextInput(
-            multiline=False, readonly=True, halign="right", font_size=25
-        )'''
-        self.solution = MDTextField(
-            hint_text= "CALCULATOR",
-            color_mode= 'accent',
-            pos_hint= {"center_y": .1},
-            mode= "rectangle"
+        self.solution = TextInput(
+            multiline=False, readonly=True, halign="right", font_size=55
         )
         main_layout.add_widget(self.solution)
         buttons = [
@@ -72,10 +40,10 @@ class MainApp(MDApp):
         for row in buttons:
             h_layout = BoxLayout()
             for label in row:
-                button = MDRectangleFlatButton(
+                button = Button(
                     text=label,
                     size_hint=(.1, .8),
-                    pos_hint={"center_x":.5, "center_y":.5},
+                    pos_hint={"center_x": .5, "center_y": .5},
                 )
                 button.bind(on_press=self.on_button_press)
                 h_layout.add_widget(button)
@@ -97,7 +65,8 @@ class MainApp(MDApp):
             if self.current and (self.last_was_xoperator and self.button_text in (self.xoperators or self.xyoperators)):
                 # Don't add two operators right after each other
                 return
-            elif (self.current == "" or self.last_button == "") and self.button_text in (self.xoperators or self.xyoperators):
+            elif (self.current == "" or self.last_button == "") and self.button_text in (
+                    self.xoperators or self.xyoperators):
                 # First character cannot be an operator
                 return
             elif self.button_text in self.xyoperators:
@@ -122,14 +91,11 @@ class MainApp(MDApp):
             self.last_button = self.button_text
             self.last_was_xoperator = (self.last_button in self.xoperators) or (self.last_button in self.xyoperators)
 
-
-
         print("BUTTON TEXT " + self.button_text)
         print("SOLUTION TEXT " + self.solution.text)
         print("op " + str(op))
         print("xyop " + str(self.xyop))
         print("\n\n")
-
 
     def on_solution(self, instance):
         text = self.solution.text
@@ -139,49 +105,51 @@ class MainApp(MDApp):
 
     def choose_operation(self, text):
         soltext = "-1"
-        match self.button_text:
-            case "sen(x)":
-                soltext = str(funtras.sin_t(float(text)))
-            case "cos(x)":
-                soltext = str(funtras.cos_t(float(text)))
-            case "tan(x)":
-                soltext = str(funtras.tan_t(float(text)))
-            case "senh(x)":
-                soltext = str(funtras.sinh_t(float(text)))
-            case "cosh(x)":
-                soltext = str(funtras.cosh_t(float(text)))
-            case "tanh(x)":
-                soltext = str(funtras.tanh_t(float(text)))
-            case "asen(x)":
-                soltext = str(funtras.asin_t(float(text)))
-            case "acos(x)":
-                soltext = str(funtras.asin_t(float(text)))  # FALTA !!!!!
-            case "atan(x)":
-                soltext = str(funtras.atan_t(float(text)))
-            case "sec(x)":
-                soltext = str(funtras.sec_t(float(text)))
-            case "csc(x)":
-                soltext = str(funtras.csc_t(float(text)))
-            case "cot(x)":
-                soltext = str(funtras.cot_t(float(text)))
-            case "ln(x)":
-                soltext = str(funtras.ln_t(float(text)))
-            case "log10(x)":
-                soltext = str(funtras.log_t(float(text), 10))
-            case "1/x":
-                soltext = str(funtras.div_t(float(text)))
-            case "rx":
-                soltext = str(funtras.root_t(float(text), 2))
-            case "exp(x)":
-                soltext = str(funtras.exp_t(float(text)))
-            case "x!":
-                try:
-                    x = int(text)
-                    soltext = str(funtras.fact(x))
-                except ValueError as ve:
-                    soltext = "INVALID TYPE"
-            case _:
-                soltext = "-1"
+        # match self.button_text:
+        if self.button_text == "sen(x)":
+            soltext = str(funtras.sin_t(float(text)))
+
+        elif self.button_text == "cos(x)":
+            soltext = str(funtras.cos_t(float(text)))
+
+        elif self.button_text == "tan(x)":
+            soltext = str(funtras.tan_t(float(text)))
+        elif self.button_text == "senh(x)":
+            soltext = str(funtras.sinh_t(float(text)))
+        elif self.button_text == "cosh(x)":
+            soltext = str(funtras.cosh_t(float(text)))
+        elif self.button_text == "tanh(x)":
+            soltext = str(funtras.tanh_t(float(text)))
+        elif self.button_text == "asen(x)":
+            soltext = str(funtras.asin_t(float(text)))
+        elif self.button_text == "acos(x)":
+            soltext = str(funtras.asin_t(float(text)))  # FALTA !!!!!
+        elif self.button_text == "atan(x)":
+            soltext = str(funtras.atan_t(float(text)))
+        elif self.button_text == "sec(x)":
+            soltext = str(funtras.sec_t(float(text)))
+        elif self.button_text == "csc(x)":
+            soltext = str(funtras.csc_t(float(text)))
+        elif self.button_text == "cot(x)":
+            soltext = str(funtras.cot_t(float(text)))
+        elif self.button_text == "ln(x)":
+            soltext = str(funtras.ln_t(float(text)))
+        elif self.button_text == "log10(x)":
+            soltext = str(funtras.log_t(float(text), 10))
+        elif self.button_text == "1/x":
+            soltext = str(funtras.div_t(float(text)))
+        elif self.button_text == "rx":
+            soltext = str(funtras.root_t(float(text), 2))
+        elif self.button_text == "exp(x)":
+            soltext = str(funtras.exp_t(float(text)))
+        elif self.button_text == "x!":
+            try:
+                x = int(text)
+                soltext = str(funtras.fact(x))
+            except ValueError as ve:
+                soltext = "INVALID TYPE"
+        # case _:
+        #    soltext = "-1"
 
         if soltext == "inf":
             soltext = "MATH ERROR"
@@ -190,29 +158,27 @@ class MainApp(MDApp):
         self.last_was_xoperator = False
         self.button_text = soltext
         self.solution.text = soltext
-
 
     def choose_xyoperation(self, x, text):
         soltext = "-1"
-        match self.last_button:
-            case "logy(x)":
-                soltext = str(funtras.log_t(float(text), float(x)))
-            case "yrx":
-                soltext = str(funtras.root_t(float(text), float(x)))
-            case "x*y":
-                soltext = str(float(x)*float(text))
-                # soltext = str(funtras.log_t(float(text), float(x)))
-            case "x+y":
-                soltext = str(float(x) + float(text))
-                # soltext = str(funtras.log_t(float(text), float(x)))
-            case "x-y":
-                soltext = str(float(x) - float(text))
-                # soltext = str(funtras.log_t(float(text), float(x)))
-            case "x/y":
-                soltext = str(float(x)/float(text))
-                # soltext = str(funtras.log_t(float(text), float(x)))
-            case _:
-                soltext = "uwu"
+        if self.last_button == "logy(x)":
+            soltext = str(funtras.log_t(float(text), float(x)))
+        elif self.last_button == "yrx":
+            soltext = str(funtras.root_t(float(text), float(x)))
+        elif self.last_button == "x*y":
+            soltext = str(float(x) * float(text))
+            # soltext = str(funtras.log_t(float(text), float(x)))
+        elif self.last_button == "x+y":
+            soltext = str(float(x) + float(text))
+            # soltext = str(funtras.log_t(float(text), float(x)))
+        elif self.last_button == "x-y":
+            soltext = str(float(x) - float(text))
+            # soltext = str(funtras.log_t(float(text), float(x)))
+        elif self.last_button == "x/y":
+            soltext = str(float(x) / float(text))
+            # soltext = str(funtras.log_t(float(text), float(x)))
+        # case _:
+        #    soltext = "uwu"
         if soltext == "inf":
             soltext = "MATH ERROR"
         self.current = soltext
@@ -220,10 +186,6 @@ class MainApp(MDApp):
         self.last_was_xoperator = False
         self.button_text = soltext
         self.solution.text = soltext
-
-    def set_error_message(self, instance_textfield):
-        self.screen.ids.text_field_error.error = True
-
 
 if __name__ == "__main__":
     app = MainApp()
