@@ -9,15 +9,15 @@ class MainApp(App):
     def build(self):
         self.xoperators = ["senh(x)", "cosh(x)", "tanh(x)", "asen(x)", "acos(x)", "atan(x)",
                            "sec(x)", "csc(x)", "cot(x)", "sen(x)", "cos(x)", "tan(x)", "ln(x)", "log10(x)",
-                           "1/x", "rx", "exp(x)"]
-        self.xyoperators = ["logy(x)", "yrx", "x*y"]
+                           "1/x", "rx", "exp(x)", "x!"]
+        self.xyoperators = ["logy(x)", "yrx", "x*y", "x+y", "x-y", "x/y"]
         self.last_was_xoperator = None
         self.last_was_xyoperator = None
-        self.last_button = None
+        self.last_button = ""
         self.xyop = False
         main_layout = BoxLayout(orientation="vertical")
         self.solution = TextInput(
-            multiline=False, readonly=True, halign="right", font_size=35
+            multiline=False, readonly=True, halign="right", font_size=25
         )
         main_layout.add_widget(self.solution)
         buttons = [
@@ -28,6 +28,7 @@ class MainApp(App):
             ["ln(x)", "log10(x)", "logy(x)"],
             ["1/x", "rx", "yrx"],
             ["exp(x)", "x*y", "x!"],
+            ["x+y", "x-y", "x/y"],
             ["7", "8", "9"],
             ["4", "5", "6"],
             ["1", "2", "3"],
@@ -58,7 +59,7 @@ class MainApp(App):
         self.button_text = instance.text
         op = False
 
-        print(self.button_text)
+        print("LAST BUTTON " + self.last_button)
 
         if self.button_text == "CLR":
             # Clear the solution widget
@@ -67,15 +68,17 @@ class MainApp(App):
             if self.current and (self.last_was_xoperator and self.button_text in (self.xoperators or self.xyoperators)):
                 # Don't add two operators right after each other
                 return
-            elif self.current == "" and self.button_text in (self.xoperators or self.xyoperators):
+            elif (self.current == "" or self.last_button == "") and self.button_text in (self.xoperators or self.xyoperators):
                 # First character cannot be an operator
                 return
             elif (self.button_text in self.xoperators) or self.xyop:
+
                 try:
                     self.choose_operation(self.last_button)
                 except OverflowError as oe:
                     self.solution.text = "OVERFLOW"
                 op = True
+
             elif self.button_text in self.xyoperators:
                 self.xyop = True
             else:
@@ -84,6 +87,14 @@ class MainApp(App):
         if not op:
             self.last_button = self.button_text
             self.last_was_xoperator = self.last_button in (self.xoperators or self.xyoperators)
+            if self.last_was_xoperator:
+                self.x = self.last_button
+
+        print("BUTTON TEXT " + self.button_text)
+        print("SOLUTION TEXT " + self.solution.text)
+        print("LAST WAS OPERATOR " + str(self.last_was_xoperator))
+        print("\n\n")
+
 
     def on_solution(self, instance):
         text = self.solution.text
@@ -92,6 +103,7 @@ class MainApp(App):
             self.solution.text = solution
 
     def choose_operation(self, text):
+        soltext = "-1"
         match self.button_text:
             case "sen(x)":
                 soltext = str(funtras.sin_t(float(text)))
@@ -117,11 +129,27 @@ class MainApp(App):
                 soltext = str(funtras.csc_t(float(text)))
             case "cot(x)":
                 soltext = str(funtras.cot_t(float(text)))
-
-            case "x*y":
-                soltext = str(funtras.cot_t(float(text)))
+            case "ln(x)":
+                soltext = str(funtras.ln_t(float(text)))
+            case "log10(x)":
+                soltext = str(funtras.log_t(float(text), 10))
+            case "1/x":
+                soltext = str(funtras.div_t(float(text)))
+            case "rx":
+                soltext = str(funtras.root_t(float(text), 2))
+            case "exp(x)":
+                soltext = str(funtras.exp_t(float(text)))
+            case "x!":
+                try:
+                    x = int(text)
+                    soltext = str(funtras.fact(x))
+                except ValueError as ve:
+                    soltext = "INVALID TYPE"
             case _:
                 soltext = "-1"
+
+        if soltext == "inf":
+            soltext = "MATH ERROR"
         self.current = soltext
         self.last_button = self.current
         self.last_was_xoperator = False

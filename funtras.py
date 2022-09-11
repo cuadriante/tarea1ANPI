@@ -1,8 +1,11 @@
 def fact(x):
-    fac = 1
-    for i in range(1, x + 1):
-        fac = fac * i
-    return fac
+    if isinstance(x, int):
+        fac = 1
+        for i in range(1, x + 1):
+            fac = fac * i
+        return fac
+    else:
+        return "INV TYPE"
 
 
 def div_t(a):
@@ -58,7 +61,7 @@ def exp_t(a):
         if abs(x - xprev) < tol * abs(x):
             break
 
-    print("exp", x)
+    #print("exp", x)
     return x
 
 
@@ -81,7 +84,7 @@ def sin_t(a):
     if a_sign < 0:
         x = -x
 
-    print("sen", x)
+   # print("sen", x)
     return x
 
 
@@ -99,7 +102,7 @@ def cos_t(a):
         if abs(x - xprev) < tol * abs(x):
             break
 
-    print("cos", x)
+   # print("cos", x)
     return x
 
 
@@ -111,7 +114,7 @@ def tan_t(a):
     sen_a = sin_t(a)
     x = sen_a * div_t(cos_a)
 
-    print("tan", x)
+  #  print("tan", x)
     return x
 
 
@@ -131,7 +134,7 @@ def ln_t(a):
             if abs(x - xprev) < tol * abs(x):
                 break
 
-        print("ln", x)
+       # print("ln", x)
         return x
 
     else:
@@ -145,7 +148,7 @@ def log_t(a, b):
     if a > 0 and b > 0:
 
         x = (ln_t(a)) * div_t(ln_t(b))
-        print("log", x)
+      #  print("log", x)
         return x
 
     else:
@@ -166,7 +169,7 @@ def power_t(a, b):
     if b < 0:
         x = div_t(x)
 
-    print("power", x)
+   # print("power", x)
     return x
 
 
@@ -189,7 +192,7 @@ def sinh_t(a):
     if a_sign < 0:
         x = -x
 
-    print("sinh", x)
+   # print("sinh", x)
     return x
 
 
@@ -211,7 +214,7 @@ def cosh_t(a):
     if a_sign < 0:
         x = -x
 
-    print("cosh", x)
+   # print("cosh", x)
     return x
 
 
@@ -223,7 +226,7 @@ def tanh_t(a):
     senh_a = sinh_t(a)
     x = senh_a * div_t(cosh_a)
 
-    print("tanh", x)
+   # print("tanh", x)
     return x
 
 
@@ -241,7 +244,7 @@ def root_t(a, b):
             x = x - ((x ** b - a) * div_t(b * x ** (b - 1)))
             if abs(x - xprev) < tol * abs(x):
                 break
-        print("root", x)
+       # print("root", x)
         return x
 
     else:
@@ -267,7 +270,7 @@ def asin_t(a):
     if a_sign < 0:
         x = -x
 
-    print("asin", x)
+   # print("asin", x)
     return x
 
 
@@ -286,7 +289,7 @@ def atan_t(a):
             if abs(x - xprev) < tol * abs(x):
                 break
 
-        print("atan", x)
+      #  print("atan", x)
         return x
 
     elif a > 1:
@@ -299,7 +302,7 @@ def atan_t(a):
                 break
         x = pi * div_t(2) - x
 
-        print("atan", x)
+      #  print("atan", x)
         return x
 
     elif a < -1:
@@ -312,7 +315,7 @@ def atan_t(a):
                 break
         x = -pi * div_t(2) - x
 
-        print("atan", x)
+       # print("atan", x)
         return x
 
 
@@ -320,7 +323,7 @@ atan_t(0.5)
 
 
 def csc_t(a):
-    print("csc", div_t(sin_t(a)))
+  #  print("csc", div_t(sin_t(a)))
     return div_t(sin_t(a))
 
 
@@ -328,7 +331,7 @@ csc_t(3)
 
 
 def sec_t(a):
-    print("sec", div_t(cos_t(a)))
+   # print("sec", div_t(cos_t(a)))
     return div_t(cos_t(a))
 
 
@@ -336,7 +339,7 @@ sec_t(0.4)
 
 
 def cot_t(a):
-    print("cot", div_t(tan_t(a)))
+   # print("cot", div_t(tan_t(a)))
     return div_t(tan_t(a))
 
 
