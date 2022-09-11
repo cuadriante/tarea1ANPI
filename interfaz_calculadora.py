@@ -173,16 +173,16 @@ class MainApp(App):
             case "yrx":
                 soltext = str(funtras.root_t(float(text), float(x)))
             case "x*y":
-                soltext = "multi"
+                soltext = str(float(x)*float(text))
                 # soltext = str(funtras.log_t(float(text), float(x)))
             case "x+y":
-                soltext = "suma"
+                soltext = str(float(x) + float(text))
                 # soltext = str(funtras.log_t(float(text), float(x)))
             case "x-y":
-                soltext = "resta"
+                soltext = str(float(x) - float(text))
                 # soltext = str(funtras.log_t(float(text), float(x)))
             case "x/y":
-                soltext = "divi"
+                soltext = str(float(x)/float(text))
                 # soltext = str(funtras.log_t(float(text), float(x)))
             case _:
                 soltext = "uwu"
