@@ -1,12 +1,40 @@
-from kivy.app import App
+from kivymd.app import MDApp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
+from kivymd.uix.button import MDRectangleFlatButton
+from kivymd.uix.textfield import MDTextField
+from kivy.core.window import Window
+from kivy.lang import Builder
 import funtras
+Window.size = (350, 550)
+KV = '''
+BoxLayout:
+    padding: "10dp"
 
+    MDTextField:
+        id: text_field_error
+        hint_text: "color_mode = 'accent'"
+        color_mode: 'accent'
+        pos_hint: {"center_y": .5}
+        mode: "rectangle"
+'''
 
-class MainApp(App):
+class MainApp(MDApp):
+    title = "Calculator"
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.screen = Builder.load_string(KV)
+
     def build(self):
+        self.theme_cls.primary_palette = "Green"  # "Purple", "Red"
+        self.theme_cls.primary_hue = "200"  # "500"
+        self.theme_cls.theme_style = "Dark"  # "Light"
+        self.screen.ids.text_field_error.bind(
+            on_text_validate=self.set_error_message,
+            on_focus=self.set_error_message,
+        )
+
         self.xoperators = ["senh(x)", "cosh(x)", "tanh(x)", "asen(x)", "acos(x)", "atan(x)",
                            "sec(x)", "csc(x)", "cot(x)", "sen(x)", "cos(x)", "tan(x)", "ln(x)", "log10(x)",
                            "1/x", "rx", "exp(x)", "x!"]
@@ -17,8 +45,14 @@ class MainApp(App):
         self.xyop = False
         self.x = ""
         main_layout = BoxLayout(orientation="vertical")
-        self.solution = TextInput(
+        '''self.solution = TextInput(
             multiline=False, readonly=True, halign="right", font_size=25
+        )'''
+        self.solution = MDTextField(
+            hint_text= "CALCULATOR",
+            color_mode= 'accent',
+            pos_hint= {"center_y": .1},
+            mode= "rectangle"
         )
         main_layout.add_widget(self.solution)
         buttons = [
@@ -38,21 +72,14 @@ class MainApp(App):
         for row in buttons:
             h_layout = BoxLayout()
             for label in row:
-                button = Button(
+                button = MDRectangleFlatButton(
                     text=label,
-                    pos_hint={"center_x": 0.5, "center_y": 0.5},
+                    size_hint=(.1, .8),
+                    pos_hint={"center_x":.5, "center_y":.5},
                 )
                 button.bind(on_press=self.on_button_press)
                 h_layout.add_widget(button)
             main_layout.add_widget(h_layout)
-
-        equals_button = Button(
-            text="=", pos_hint={"center_x": 0.5, "center_y": 0.5}
-        )
-        equals_button.bind(on_press=self.on_solution)
-
-        main_layout.add_widget(equals_button)
-
         return main_layout
 
     def on_button_press(self, instance):
@@ -194,7 +221,8 @@ class MainApp(App):
         self.button_text = soltext
         self.solution.text = soltext
 
-
+    def set_error_message(self, instance_textfield):
+        self.screen.ids.text_field_error.error = True
 
 
 if __name__ == "__main__":
