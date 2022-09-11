@@ -15,6 +15,7 @@ class MainApp(App):
         self.last_was_xyoperator = None
         self.last_button = ""
         self.xyop = False
+        self.x = ""
         main_layout = BoxLayout(orientation="vertical")
         self.solution = TextInput(
             multiline=False, readonly=True, halign="right", font_size=25
@@ -60,6 +61,7 @@ class MainApp(App):
         op = False
 
         print("LAST BUTTON " + self.last_button)
+        print("LAST WAS OPERATOR " + str(self.last_was_xoperator))
 
         if self.button_text == "CLR":
             # Clear the solution widget
@@ -71,28 +73,34 @@ class MainApp(App):
             elif (self.current == "" or self.last_button == "") and self.button_text in (self.xoperators or self.xyoperators):
                 # First character cannot be an operator
                 return
-            elif (self.button_text in self.xoperators) or self.xyop:
+            elif self.button_text in self.xyoperators:
+                self.xyop = True
+            elif self.button_text in self.xoperators:
 
                 try:
                     self.choose_operation(self.last_button)
                 except OverflowError as oe:
                     self.solution.text = "OVERFLOW"
                 op = True
-
-            elif self.button_text in self.xyoperators:
-                self.xyop = True
+            elif self.xyop and (self.button_text not in (self.xyoperators or self.xoperators)):
+                print("x " + self.x)
+                self.choose_xyoperation(self.x, self.button_text)
+                self.xyop = False
             else:
                 new_text = self.current + self.button_text
                 self.solution.text = new_text
         if not op:
-            self.last_button = self.button_text
-            self.last_was_xoperator = self.last_button in (self.xoperators or self.xyoperators)
-            if self.last_was_xoperator:
+            if self.xyop:
                 self.x = self.last_button
+            self.last_button = self.button_text
+            self.last_was_xoperator = (self.last_button in self.xoperators) or (self.last_button in self.xyoperators)
+
+
 
         print("BUTTON TEXT " + self.button_text)
         print("SOLUTION TEXT " + self.solution.text)
-        print("LAST WAS OPERATOR " + str(self.last_was_xoperator))
+        print("op " + str(op))
+        print("xyop " + str(self.xyop))
         print("\n\n")
 
 
@@ -155,6 +163,38 @@ class MainApp(App):
         self.last_was_xoperator = False
         self.button_text = soltext
         self.solution.text = soltext
+
+
+    def choose_xyoperation(self, x, text):
+        soltext = "-1"
+        match self.last_button:
+            case "logy(x)":
+                soltext = str(funtras.log_t(float(text), float(x)))
+            case "yrx":
+                soltext = str(funtras.root_t(float(text), float(x)))
+            case "x*y":
+                soltext = "multi"
+                # soltext = str(funtras.log_t(float(text), float(x)))
+            case "x+y":
+                soltext = "suma"
+                # soltext = str(funtras.log_t(float(text), float(x)))
+            case "x-y":
+                soltext = "resta"
+                # soltext = str(funtras.log_t(float(text), float(x)))
+            case "x/y":
+                soltext = "divi"
+                # soltext = str(funtras.log_t(float(text), float(x)))
+            case _:
+                soltext = "uwu"
+        if soltext == "inf":
+            soltext = "MATH ERROR"
+        self.current = soltext
+        self.last_button = self.current
+        self.last_was_xoperator = False
+        self.button_text = soltext
+        self.solution.text = soltext
+
+
 
 
 if __name__ == "__main__":
