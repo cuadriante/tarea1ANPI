@@ -1,3 +1,5 @@
+import math
+
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
@@ -13,7 +15,7 @@ class MainApp(App):
         self.xoperators = ["senh(x)", "cosh(x)", "tanh(x)", "asen(x)", "acos(x)", "atan(x)",
                            "sec(x)", "csc(x)", "cot(x)", "sen(x)", "cos(x)", "tan(x)", "ln(x)", "log10(x)",
                            "1/x", "root(x)", "exp(x)", "x!"]
-        self.xyoperators = ["logy(x)", "yroot(x)", "x*y", "x+y", "x-y", "x/y"]
+        self.xyoperators = ["logy(x)", "yroot(x)", "x^y", "x+y", "x-y", "x/y"]
         self.last_was_xoperator = None
         self.last_was_xyoperator = None
         self.last_button = ""
@@ -31,6 +33,8 @@ class MainApp(App):
 
         main_layout.add_widget(help_button)
 
+
+
         self.solution = TextInput(
             multiline=False,
             readonly=True,
@@ -46,12 +50,11 @@ class MainApp(App):
             ["sen(x)", "cos(x)", "tan(x)"],
             ["ln(x)", "log10(x)", "logy(x)"],
             ["1/x", "root(x)", "yroot(x)"],
-            ["exp(x)", "x*y", "x!"],
-            ["x+y", "x-y", "x/y"],
+            ["exp(x)", "x^y", "x!"],
             ["7", "8", "9"],
             ["4", "5", "6"],
             ["1", "2", "3"],
-            ["CLR", "0", "."],
+            ["π", "0", "."],
         ]
         for row in buttons:
             h_layout = BoxLayout()
@@ -66,7 +69,7 @@ class MainApp(App):
                         background_color={0.1, 0.5, 0.6, 1}
                     )
                 except:
-                    if label == "CLR":
+                    if label == "π":
                         button = Button(
                             text=label,
                             size_hint=(.1, .8),
@@ -102,8 +105,17 @@ class MainApp(App):
             background_color={0.1, 0.5, 0.6, 1}
         )
         equals_button.bind(on_press=self.on_solution)
-
         main_layout.add_widget(equals_button)
+
+        clr_button = Button(
+            text="CLR",
+            pos_hint={"center_x": .5, "center_y": .5},
+            background_normal='',
+            background_color={1, .3, .4, .85}
+        )
+        clr_button.bind(on_press=self.on_button_press)
+
+        main_layout.add_widget(clr_button)
 
         return main_layout
 
@@ -115,7 +127,11 @@ class MainApp(App):
         print("LAST BUTTON " + self.last_button)
         print("LAST WAS OPERATOR " + str(self.last_was_xoperator))
 
-        if self.button_text == "CLR":
+        if self.button_text == "π":
+            # Clear the solution widget
+            self.solution.text = str(math.pi)
+
+        elif self.button_text == "CLR":
             # Clear the solution widget
             self.solution.text = ""
             self.x = ""
@@ -267,8 +283,8 @@ class MainApp(App):
             soltext = str(funtras.log_t(float(text), float(x)))
         elif self.operator == "yroot(x)":
             soltext = str(funtras.root_t(float(text), float(x)))
-        elif self.operator == "x*y":
-            soltext = str(float(x) * float(text))
+        elif self.operator == "x^y":
+            soltext = str(funtras.power_t(float(text), float(x)))
             # soltext = str(funtras.log_t(float(text), float(x)))
         elif self.operator == "x+y":
             soltext = str(float(x) + float(text))
