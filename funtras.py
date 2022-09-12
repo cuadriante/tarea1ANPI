@@ -318,6 +318,8 @@ def power_t(a, b):
     iterMax = 2500
     c = b
     b = abs(b)
+    if a == 0:
+        return 0
     for i in range(1, iterMax):
         xprev = x
         x += ((b ** i) * (ln_t(a)) ** i) * div_t(fact(i))
