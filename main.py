@@ -12,8 +12,8 @@ class MainApp(App):
 
         self.xoperators = ["senh(x)", "cosh(x)", "tanh(x)", "asen(x)", "acos(x)", "atan(x)",
                            "sec(x)", "csc(x)", "cot(x)", "sen(x)", "cos(x)", "tan(x)", "ln(x)", "log10(x)",
-                           "1/x", "rx", "exp(x)", "x!"]
-        self.xyoperators = ["logy(x)", "yrx", "x*y", "x+y", "x-y", "x/y"]
+                           "1/x", "root(x)", "exp(x)", "x!"]
+        self.xyoperators = ["logy(x)", "yroot(x)", "x*y", "x+y", "x-y", "x/y"]
         self.last_was_xoperator = None
         self.last_was_xyoperator = None
         self.last_button = ""
@@ -35,7 +35,7 @@ class MainApp(App):
             multiline=False,
             readonly=True,
             halign="right",
-            font_size=25,
+            font_size=55,
             background_color={0.1, 0.1, 0.7, 0.3}
         )
         main_layout.add_widget(self.solution)
@@ -45,7 +45,7 @@ class MainApp(App):
             ["sec(x)", "csc(x)", "cot(x)"],
             ["sen(x)", "cos(x)", "tan(x)"],
             ["ln(x)", "log10(x)", "logy(x)"],
-            ["1/x", "rx", "yrx"],
+            ["1/x", "root(x)", "yroot(x)"],
             ["exp(x)", "x*y", "x!"],
             ["x+y", "x-y", "x/y"],
             ["7", "8", "9"],
@@ -135,7 +135,7 @@ class MainApp(App):
             elif self.button_text in self.xoperators:
 
                 try:
-                    self.choose_operation(self.last_button)
+                    self.choose_operation(self.solution.text)
                 except OverflowError as oe:
                     self.solution.text = "OVERFLOW"
                 op = True
@@ -170,7 +170,8 @@ class MainApp(App):
                                                        "y seleccione el operador, escriba el \n"
                                                        "segundo numero a operar y seleccione \n"
                                                        "'=', el resultado se desplegará."),
-                      size_hint=(None, None), size=(400, 400))
+                      size_hint = (None, None),
+                      size = (700, 700))
 
         popup.open()
 
@@ -229,7 +230,7 @@ class MainApp(App):
             soltext = str(funtras.log_t(float(text), 10))
         elif self.button_text == "1/x":
             soltext = str(funtras.div_t(float(text)))
-        elif self.button_text == "rx":
+        elif self.button_text == "root(x)":
             soltext = str(funtras.root_t(float(text), 2))
         elif self.button_text == "exp(x)":
             soltext = str(funtras.exp_t(float(text)))
@@ -254,7 +255,7 @@ class MainApp(App):
         soltext = "-1"
         if self.operator == "logy(x)":
             soltext = str(funtras.log_t(float(text), float(x)))
-        elif self.operator == "yrx":
+        elif self.operator == "yroot(x)":
             soltext = str(funtras.root_t(float(text), float(x)))
         elif self.operator == "x*y":
             soltext = str(float(x) * float(text))
