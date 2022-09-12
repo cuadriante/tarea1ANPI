@@ -225,13 +225,22 @@ class MainApp(App):
         elif self.button_text == "cot(x)":
             soltext = str(funtras.cot_t(float(text)))
         elif self.button_text == "ln(x)":
-            soltext = str(funtras.ln_t(float(text)))
+            if float(text) <= 0:
+                soltext = "MATH ERROR"
+            else:
+                soltext = str(funtras.ln_t(float(text)))
         elif self.button_text == "log10(x)":
-            soltext = str(funtras.log_t(float(text), 10))
+            if float(text) <= 0:
+                soltext = "MATH ERROR"
+            else:
+                soltext = str(funtras.log_t(float(text), 10))
         elif self.button_text == "1/x":
             soltext = str(funtras.div_t(float(text)))
         elif self.button_text == "root(x)":
-            soltext = str(funtras.root_t(float(text), 2))
+            if float(text) < 0:
+                soltext = "MATH ERROR"
+            else:
+                soltext = str(funtras.root_t(float(text), 2))
         elif self.button_text == "exp(x)":
             soltext = str(funtras.exp_t(float(text)))
         elif self.button_text == "x!":
@@ -240,6 +249,7 @@ class MainApp(App):
                 soltext = str(funtras.fact(x))
             except ValueError as ve:
                 soltext = "INVALID TYPE"
+
         # case _:
         #    soltext = "-1"
 
@@ -267,7 +277,10 @@ class MainApp(App):
             soltext = str(float(x) - float(text))
             # soltext = str(funtras.log_t(float(text), float(x)))
         elif self.operator == "x/y":
-            soltext = str(float(x) / float(text))
+            try:
+                soltext = str(float(x) / float(text))
+            except ZeroDivisionError as zde:
+                soltext = "MATH ERROR: CANNOT DIVIDE BY ZERO"
             # soltext = str(funtras.log_t(float(text), float(x)))
         # case _:
         #    soltext = "uwu"
