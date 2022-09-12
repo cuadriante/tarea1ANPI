@@ -1,10 +1,11 @@
-from kivymd.app import MDApp
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
-from kivymd.uix.button import MDRectangleFlatButton
+from kivy.uix.label import Label
 from kivy.uix.button import Button
+from kivy.uix.popup import Popup
 from kivy.uix.textinput import TextInput
 import funtras
+
 
 class MainApp(App):
     def build(self):
@@ -17,10 +18,25 @@ class MainApp(App):
         self.last_was_xyoperator = None
         self.last_button = ""
         self.xyop = False
+        self.operator = ""
         self.x = ""
+
         main_layout = BoxLayout(orientation="vertical")
+
+        help_button = Button(
+            text="HELP",
+            pos_hint={"center_x": 0.5, "center_y": 0.5},
+        )
+        help_button.bind(on_press=self.on_help)
+
+        main_layout.add_widget(help_button)
+
         self.solution = TextInput(
-            multiline=False, readonly=True, halign="right", font_size=55
+            multiline=False,
+            readonly=True,
+            halign="right",
+            font_size=25,
+            background_color={0.1, 0.1, 0.7, 0.3}
         )
         main_layout.add_widget(self.solution)
         buttons = [
@@ -40,14 +56,55 @@ class MainApp(App):
         for row in buttons:
             h_layout = BoxLayout()
             for label in row:
-                button = Button(
-                    text=label,
-                    size_hint=(.1, .8),
-                    pos_hint={"center_x": .5, "center_y": .5},
-                )
+                try:
+                    int(label)
+                    button = Button(
+                        text=label,
+                        size_hint=(.1, .8),
+                        pos_hint={"center_x": .5, "center_y": .5},
+                        background_normal='',
+                        background_color={0.1, 0.5, 0.6, 1}
+                    )
+                except:
+                    if label == "CLR":
+                        button = Button(
+                            text=label,
+                            size_hint=(.1, .8),
+                            pos_hint={"center_x": .5, "center_y": .5},
+                            background_normal='',
+                            background_color={0.1, 0.5, 0.6, 1}
+                        )
+                    elif label == ".":
+                        button = Button(
+                            text=label,
+                            size_hint=(.1, .8),
+                            pos_hint={"center_x": .5, "center_y": .5},
+                            background_normal='',
+                            background_color={0.1, 0.5, 0.6, 1}
+                        )
+                    else:
+                        button = Button(
+                            text=label,
+                            size_hint=(.1, .8),
+                            pos_hint={"center_x": .5, "center_y": .5},
+                            background_normal='',
+                            background_color={1, .3, .4, .85}
+                        )
+
                 button.bind(on_press=self.on_button_press)
                 h_layout.add_widget(button)
             main_layout.add_widget(h_layout)
+
+        equals_button = Button(
+            text="=",
+            pos_hint={"center_x": 0.5, "center_y": 0.5},
+            background_normal='',
+            background_color={0.1, 0.5, 0.6, 1}
+        )
+        equals_button.bind(on_press=self.on_solution)
+
+        main_layout.add_widget(equals_button)
+
         return main_layout
 
     def on_button_press(self, instance):
@@ -61,6 +118,7 @@ class MainApp(App):
         if self.button_text == "CLR":
             # Clear the solution widget
             self.solution.text = ""
+            self.x = ""
         else:
             if self.current and (self.last_was_xoperator and self.button_text in (self.xoperators or self.xyoperators)):
                 # Don't add two operators right after each other
@@ -71,6 +129,9 @@ class MainApp(App):
                 return
             elif self.button_text in self.xyoperators:
                 self.xyop = True
+                self.operator = self.button_text
+                self.x = self.solution.text
+                self.solution.text = ""
             elif self.button_text in self.xoperators:
 
                 try:
@@ -78,16 +139,12 @@ class MainApp(App):
                 except OverflowError as oe:
                     self.solution.text = "OVERFLOW"
                 op = True
-            elif self.xyop and (self.button_text not in (self.xyoperators or self.xoperators)):
-                print("x " + self.x)
-                self.choose_xyoperation(self.x, self.button_text)
-                self.xyop = False
             else:
                 new_text = self.current + self.button_text
                 self.solution.text = new_text
         if not op:
-            if self.xyop:
-                self.x = self.last_button
+            # if self.xyop and not (self.last_button in self.xoperators) or (self.last_button in self.xyoperators):
+            #   self.x = self.last_button
             self.last_button = self.button_text
             self.last_was_xoperator = (self.last_button in self.xoperators) or (self.last_button in self.xyoperators)
 
@@ -97,11 +154,45 @@ class MainApp(App):
         print("xyop " + str(self.xyop))
         print("\n\n")
 
+    def on_help(selfself, instance):
+        popup = Popup(title="HELP", content=Label(text="Tecnológico de Costa Rica \n"
+                                                       "Análisis Numerico para Ingenieria \n\n"
+                                                       "Adriana Calderon Barboza\n"
+                                                       "Anthony Chaves Achoy\n"
+                                                       "David de la Hoz Aguirre\n\n\n"
+                                                        "INSTRUCCIONES:\n"
+                                                       "OPERACIONES DE UNA VARIABLE (X): Escriba\n"
+                                                       "el numero a operar y seleccione el \n"
+                                                       "operador, el resultado se desplegara \n"
+                                                       "automaticamente \n\n"
+                                                       "OPERACIONES DE DOS VARIABLES (X,Y): \n"
+                                                       "Escriba el primer numero a operar \n"
+                                                       "y seleccione el operador, escriba el \n"
+                                                       "segundo numero a operar y seleccione \n"
+                                                       "'=', el resultado se desplegará."),
+                      size_hint=(None, None), size=(400, 400))
+
+        popup.open()
+
     def on_solution(self, instance):
-        text = self.solution.text
-        if text:
-            solution = str(self.choose_operation(text))
-            self.solution.text = solution
+        if self.xyop and (self.x != "") and (
+                self.last_button not in self.xyoperators or self.last_button not in self.xoperators):
+            print("x " + self.x)
+            self.y = self.solution.text
+            print("y " + self.y)
+            self.choose_xyoperation(self.x, self.y)
+            self.xyop = False
+            self.operator = ""
+
+        print("BUTTON TEXT " + self.button_text)
+        print("SOLUTION TEXT " + self.solution.text)
+        print("xyop " + str(self.xyop))
+        print("\n\n")
+
+        if self.xyop:
+            self.x = self.last_button
+        self.last_button = self.button_text
+        self.last_was_xoperator = (self.last_button in self.xoperators) or (self.last_button in self.xyoperators)
 
     def choose_operation(self, text):
         soltext = "-1"
@@ -161,20 +252,20 @@ class MainApp(App):
 
     def choose_xyoperation(self, x, text):
         soltext = "-1"
-        if self.last_button == "logy(x)":
+        if self.operator == "logy(x)":
             soltext = str(funtras.log_t(float(text), float(x)))
-        elif self.last_button == "yrx":
+        elif self.operator == "yrx":
             soltext = str(funtras.root_t(float(text), float(x)))
-        elif self.last_button == "x*y":
+        elif self.operator == "x*y":
             soltext = str(float(x) * float(text))
             # soltext = str(funtras.log_t(float(text), float(x)))
-        elif self.last_button == "x+y":
+        elif self.operator == "x+y":
             soltext = str(float(x) + float(text))
             # soltext = str(funtras.log_t(float(text), float(x)))
-        elif self.last_button == "x-y":
+        elif self.operator == "x-y":
             soltext = str(float(x) - float(text))
             # soltext = str(funtras.log_t(float(text), float(x)))
-        elif self.last_button == "x/y":
+        elif self.operator == "x/y":
             soltext = str(float(x) / float(text))
             # soltext = str(funtras.log_t(float(text), float(x)))
         # case _:
@@ -186,6 +277,7 @@ class MainApp(App):
         self.last_was_xoperator = False
         self.button_text = soltext
         self.solution.text = soltext
+
 
 if __name__ == "__main__":
     app = MainApp()
