@@ -8,6 +8,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.textinput import TextInput
 import funtras
 
+pi = 3.141592653589793
 
 class MainApp(App):
     def build(self):
@@ -129,7 +130,7 @@ class MainApp(App):
 
         if self.button_text == "π":
             # Clear the solution widget
-            self.solution.text = str(math.pi)
+            self.solution.text = str(pi)
 
         elif self.button_text == "CLR":
             # Clear the solution widget
@@ -185,9 +186,7 @@ class MainApp(App):
                                                        "Escriba el primer numero a operar \n"
                                                        "y seleccione el operador, escriba el \n"
                                                        "segundo numero a operar y seleccione \n"
-                                                       "'=', el resultado se desplegará."),
-                      size_hint = (None, None),
-                      size = (700, 700))
+                                                       "'=', el resultado se desplegará."))
 
         popup.open()
 
@@ -221,7 +220,10 @@ class MainApp(App):
             soltext = str(funtras.cos_t(float(text)))
 
         elif self.button_text == "tan(x)":
-            soltext = str(funtras.tan_t(float(text)))
+            if -pi/2 < float(text) < pi/2:
+                soltext = str(funtras.tan_t(float(text)))
+            else:
+                soltext = "MATH ERROR"
         elif self.button_text == "senh(x)":
             soltext = str(funtras.sinh_t(float(text)))
         elif self.button_text == "cosh(x)":
@@ -284,7 +286,10 @@ class MainApp(App):
         elif self.operator == "yroot(x)":
             soltext = str(funtras.root_t(float(text), float(x)))
         elif self.operator == "x^y":
-            soltext = str(funtras.power_t(float(text), float(x)))
+            if (float(x) == 0.0 and float(text) == 0.0) or (float(text) < 0):
+                soltext = "MATH ERROR"
+            else:
+                soltext = str(funtras.power_t(float(x), float(text)))
             # soltext = str(funtras.log_t(float(text), float(x)))
         elif self.operator == "x+y":
             soltext = str(float(x) + float(text))
