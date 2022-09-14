@@ -9,6 +9,12 @@ import funtras
 pi = 3.141592653589793
 
 class MainApp(App):
+
+    '''
+    Descripción: con base en una matriz, crea los botones de operacion y numerales, crea
+                 el cuadro de texto y boton de ayuda
+    Parámetros:  -
+    '''
     def build(self):
 
         self.xoperators = ["senh(x)", "cosh(x)", "tanh(x)", "asen(x)", "acos(x)", "atan(x)",
@@ -118,6 +124,11 @@ class MainApp(App):
 
         return main_layout
 
+    '''
+    Descripción: al presionar un boton de operacion o numeral, revisa lo que se presionó y 
+                 ha sido presionado para verificar si se debe realizar una operación
+    Parámetros:  -
+    '''
     def on_button_press(self, instance):
         self.current = self.solution.text
         self.button_text = instance.text
@@ -169,7 +180,11 @@ class MainApp(App):
         print("xyop " + str(self.xyop))
         print("\n\n")
 
-    def on_help(selfself, instance):
+    '''
+    Descripción: al presionar el boton de help, muestra un popup con instrucciones
+    Parámetros: -
+    '''
+    def on_help(selfself):
         popup = Popup(title="HELP", content=Label(text="Tecnológico de Costa Rica \n"
                                                        "Análisis Numerico para Ingenieria \n\n"
                                                        "Adriana Calderon Barboza\n"
@@ -188,7 +203,13 @@ class MainApp(App):
 
         popup.open()
 
-    def on_solution(self, instance):
+    '''
+    Descripción: al presionar el boton de igual, revisa lo que se presionó y 
+                 ha sido presionado para verificar si se debe realizar una operación
+    Parámetros:  -
+    '''
+
+    def on_solution(self):
         if self.xyop and (self.x != "") and (
                 self.last_button not in self.xyoperators or self.last_button not in self.xoperators):
             print("x " + self.x)
@@ -207,6 +228,12 @@ class MainApp(App):
             self.x = self.last_button
         self.last_button = self.button_text
         self.last_was_xoperator = (self.last_button in self.xoperators) or (self.last_button in self.xyoperators)
+
+    '''
+    Descripción: con base en el operador de una variable seleccionado, 
+                realiza la operacion a partir de text
+    Parámetros: text (numero a operar)
+    '''
 
     def choose_operation(self, text):
         soltext = "-1"
@@ -277,6 +304,12 @@ class MainApp(App):
         self.button_text = soltext
         self.solution.text = soltext
 
+    '''
+    Descripción: con base en el operador de dos variables seleccionado, 
+                realiza la operacion a partir de x y text
+    Parámetros: x (numero a operar), text (segundo numero a operar)
+    '''
+
     def choose_xyoperation(self, x, text):
         soltext = "-1"
         if self.operator == "logy(x)":
@@ -310,7 +343,6 @@ class MainApp(App):
         self.last_was_xoperator = False
         self.button_text = soltext
         self.solution.text = soltext
-
 
 if __name__ == "__main__":
     app = MainApp()
